@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Snake Game Project</title>
+        <style>
+            canvas {
+                border: 3px solid #060606;
+                margin: 20px auto;
+                display: block;
+            }
+        </style>
+        <h1>Choose Your Difficulty!</h1>
+        <button id="easy" onclick="start(this.id)">Easy Mode!</button>
+        <button id="medium" onclick="start(this.id)">Medium Mode!</button>
+        <button id="hard" onclick="start(this.id)">Hard Mode!</button>
+        <button onclick="devB3()">Testing Testing!!!!!</button>
+        <p id="devcheck"></p>
+        <p id="devcheck2"></p>
+        <p id="diff"></p>
+        <button onclick="start()">start</button>
+    </head>
+    <body>
+        <canvas id="snakeCanvas" width="600" height="600"></canvas>
+        <script>
+            const canvas = document.getElementById("snakeCanvas");
+            const ctx = canvas.getContext("2d");
+
+            const tileSize = 20;
+            const gridSize = canvas.width / tileSize;
+
+            let snake = [{ x: 5, y: 5 }];
+            let food = { x: 10, y: 10 };
+            let direction = "right";
+            let difficulty;
+            // easy:200 medium:150 hard:100
+            
+            
+          
+            function drawSnake() {
+                ctx.fillStyle = "green";
+                snake.forEach(segment => {
+                    ctx.fillRect(segment.x * tileSize, segment.y * tileSize, tileSize, tileSize);
+                });
+            }
+
+            function drawFood() {
+                ctx.fillStyle = "red";
+                ctx.fillRect(food.x * tileSize, food.y * tileSize, tileSize, tileSize);
+            }
+
+            function moveSnake() {
+                const head= { ...snake[0] };
+
+                switch (direction) {
+                    case "up":
+                        head.y--;
+                        break;
+                    case "down":
+                        head.y++;
+                        break;
+                    case "left":
+                        head.x--;
+                        break;
+                    case "right":
+                        head.x++;
+                        break;
+                }
+
+                snake.unshift(head);
+
+                if (head.x === food.x && head.y === food.y) {
+                    generateFood();
+                } else {
+                    snake.pop();
+                }
+            }
+
+            function generateFood() {
+                food = {
+                    x: Math.floor(Math.random() * gridSize),
+                    y: Math.floor(Math.random() * gridSize)
+                };
+            }
+
+            function checkCollisions() {
+                const head = snake[0];
+
+                if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize) {
+                    resetGame();    
+                }
+
+                for (let i = 1; i < snake.length; i++) {
+                    if (head.x === snake[i].x && head.y === snake[i].y) {
+                        resetGame();
+                    }
+                }
+            }
+
+            function resetGame() {
+                alert("Game over! Restarting...");
+                snake = [{ x: 5, y: 5}];
+                direction = "right";
+                generateFood();
+            }
+
+            function updateGame() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawSnake();
+                drawFood();
+                moveSnake();
+                checkCollisions();
+            }
+
+            document.addEventListener("keydown", (event) => {
+                switch (event.key) {
+                    case "ArrowUp":
+                        direction = "up";
+                        break;
+                    case "ArrowDown":
+                        direction = "down";
+                        break;
+                    case "ArrowLeft":
+                        direction = "left";
+                        break;
+                    case "ArrowRight":
+                        direction = "right";
+                        break;
+                }
+
+            });
+
+            function start(clicked_id) {
+                document.getElementById("devcheck").innerText = clicked_id
+                
+                switch (clicked_id) {
+                    case "easy":
+                        difficulty = 200;
+                        break;
+                    case "medium":
+                        difficulty = 150;
+                        break;
+                    case "hard":
+                        difficulty = 100;
+                        break;
+                }
+                setInterval(updateGame, difficulty);
+            }
+
+            generateFood();
+
+            function devB3() {
+                document.getElementById("diff").innerText = "diff: " + difficulty + " "
+            }
+
+/*
+            code hell
+
+            function easy() {
+                difficulty = 200;
+            }
+            function medium() {
+                difficulty = 150;
+            }
+            function hard() {
+                difficulty = 100;
+            }
+
+            document.addEventListener("click", (event) => {
+                document.getElementById("devcheck").innerText = "gorbleneeb" + obj.id
+                switch (obj.id) {
+                    case "easy":
+                        difficulty = 100;
+                        break;
+                    case "medium":
+                        difficulty = 150;
+                        break;
+                    case "hard":
+                        difficulty = 100;
+                        break;
+                }
+            })
+
+            document.getElementById("devcheck2").innerText = "working!!!"
+
+            */
+
+        </script>
+    </body>
+</html>
