@@ -12,16 +12,19 @@
             }
         </style>
         <h1>Choose Your Difficulty!</h1>
+    </head>
+    <body>
+
         <button id="easy" onclick="start(this.id)">Easy Mode!</button>
         <button id="medium" onclick="start(this.id)">Medium Mode!</button>
         <button id="hard" onclick="start(this.id)">Hard Mode!</button>
-        <button onclick="devB3()">Testing Testing!!!!!</button>
+       
         <p id="devcheck"></p>
-        <p id="devcheck2"></p>
         <p id="diff"></p>
-        <button onclick="start()">start</button>
-    </head>
-    <body>
+        <p id="score"></p>
+        <p id="diff check false"></p>
+        
+
         <canvas id="snakeCanvas" width="600" height="600"></canvas>
         <script>
             const canvas = document.getElementById("snakeCanvas");
@@ -34,14 +37,30 @@
             let food = { x: 10, y: 10 };
             let direction = "right";
             let difficulty;
+            let gameInterval = null;
+            let LastResort = 0;
+            let score = 0;
+            let colChange = 0;
             // easy:200 medium:150 hard:100
+            var colours = Array ();
+                colours[0]="red";
+                colours[1]="orange";
+                colours[2]="yellow";
+                colours[3]="green";
+                colours[4]="blue";
+                colours[5]="purple";
             
             
           
             function drawSnake() {
-                ctx.fillStyle = "green";
+                ctx.fillStyle = colours[colChange];
+                //changed snake colour to orange for easy twist after spending too much time on difficulty
                 snake.forEach(segment => {
                     ctx.fillRect(segment.x * tileSize, segment.y * tileSize, tileSize, tileSize);
+                   
+                    if (colChange == 6) {
+                        colChange = colChange - 6;
+                    }
                 });
             }
 
@@ -72,6 +91,7 @@
 
                 if (head.x === food.x && head.y === food.y) {
                     generateFood();
+                    score ++
                 } else {
                     snake.pop();
                 }
@@ -103,6 +123,7 @@
                 snake = [{ x: 5, y: 5}];
                 direction = "right";
                 generateFood();
+                score = 0
             }
 
             function updateGame() {
@@ -111,6 +132,8 @@
                 drawFood();
                 moveSnake();
                 checkCollisions();
+                document.getElementById("score").innerText = "Your score is: " + score
+                colChange ++
             }
 
             document.addEventListener("keydown", (event) => {
@@ -132,8 +155,8 @@
             });
 
             function start(clicked_id) {
-                document.getElementById("devcheck").innerText = clicked_id
                 
+               if (LastResort == 0) { 
                 switch (clicked_id) {
                     case "easy":
                         difficulty = 200;
@@ -146,6 +169,10 @@
                         break;
                 }
                 setInterval(updateGame, difficulty);
+                LastResort ++
+            } else {
+                document.getElementById("diff check false").innerText = "You've already selected a difficulty!"
+            }
             }
 
             generateFood();
@@ -157,33 +184,8 @@
 /*
             code hell
 
-            function easy() {
-                difficulty = 200;
-            }
-            function medium() {
-                difficulty = 150;
-            }
-            function hard() {
-                difficulty = 100;
-            }
-
-            document.addEventListener("click", (event) => {
-                document.getElementById("devcheck").innerText = "gorbleneeb" + obj.id
-                switch (obj.id) {
-                    case "easy":
-                        difficulty = 100;
-                        break;
-                    case "medium":
-                        difficulty = 150;
-                        break;
-                    case "hard":
-                        difficulty = 100;
-                        break;
-                }
-            })
-
-            document.getElementById("devcheck2").innerText = "working!!!"
-
+            g
+            
             */
 
         </script>
